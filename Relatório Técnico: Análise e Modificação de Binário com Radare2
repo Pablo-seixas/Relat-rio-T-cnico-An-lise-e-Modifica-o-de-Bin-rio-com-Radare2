@@ -51,7 +51,7 @@ Proteção contra manipulação de memória, incluindo ASLR e canários de pilha
 Autenticação baseada em hashing seguro, evitando comparações diretas de strings no código.
 A análise revelou vulnerabilidades que podem ser exploradas para obtenção de acesso não autorizado e reforça a necessidade de auditorias regulares em sistemas críticos para garantir a integridade e a segurança da informação.
 
-Este relatório documenta as técnicas aplicadas e os resultados obtidos durante a análise do binário. Recomenda-se a continuidade das pesquisas utilizando abordagens avançadas para mitigação de vulnerabilidades e fortalecimento da segurança de sistemas binários.
+Este relatório documenta as técnicas aplicadas e os resultados obtidos durante a análise do binário. 
 
 
 
