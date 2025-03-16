@@ -1,0 +1,61 @@
+Relatório Técnico: Análise e Modificação de Binário com Radare2
+1. Introdução
+Este relatório apresenta a análise e modificação de um binário utilizando Radare2, uma ferramenta de engenharia reversa amplamente empregada para auditoria de segurança e teste de integridade de software. O objetivo da análise foi compreender a estrutura interna do programa, identificar possíveis pontos de vulnerabilidade e modificar seu comportamento sem necessidade de acesso ao código-fonte original.
+
+2. Objetivo
+O binário analisado consiste em um sistema de fluxo de caixa que contém funções restritas por um mecanismo de autenticação. Durante a análise, foram exploradas técnicas para:
+
+Identificar e remover a verificação de senha para acesso administrativo.
+Alterar a lógica do menu para conceder acesso irrestrito às funções administrativas.
+Manipular o fluxo de execução do binário, alterando seu comportamento original.
+Essas abordagens são utilizadas para avaliar a segurança de sistemas e identificar vulnerabilidades que podem ser exploradas para obter acesso não autorizado.
+
+3. Metodologia
+A análise seguiu uma abordagem sistemática baseada nos seguintes passos:
+
+Carregamento e inspeção do binário para identificar sua estrutura.
+Identificação de funções críticas responsáveis pelo controle de acesso e execução do sistema.
+Análise do mecanismo de autenticação, com foco na verificação da senha administrativa.
+Modificação da lógica de execução, eliminando restrições de acesso e alterando a estrutura do menu.
+Testes funcionais para validar as alterações aplicadas no binário.
+4. Estrutura do Binário
+O binário foi compilado com proteções mínimas para facilitar a análise. As principais funções identificadas foram:
+
+Função de acesso administrativo: Responsável por conceder privilégios elevados ao usuário.
+Função de verificação de senha: Controla a autenticação do usuário por meio de uma comparação de strings.
+Função principal: Gerencia a lógica do sistema, incluindo a navegação pelo menu e a chamada das demais funções.
+A análise detalhada do fluxo de execução revelou que o programa realiza uma verificação da senha inserida pelo usuário antes de conceder acesso a funcionalidades restritas. Caso a senha esteja incorreta, a execução é desviada para uma mensagem de erro.
+
+5. Modificação do Binário
+Após a identificação das funções de interesse, foram aplicadas modificações diretas no binário para alterar seu comportamento.
+
+A primeira alteração consistiu na eliminação da verificação de senha. A análise revelou que a autenticação era baseada em uma comparação de strings, onde o programa verificava se a entrada do usuário correspondia a um valor armazenado internamente. Ao modificar essa verificação, qualquer senha inserida passou a ser aceita como válida, permitindo o acesso irrestrito à função administrativa.
+
+A segunda modificação envolveu a alteração do menu principal do sistema. A lógica do programa determinava que apenas um valor específico inserido pelo usuário ativava o modo administrativo. Essa restrição foi removida, garantindo que qualquer entrada conduzisse diretamente à execução da função administrativa.
+
+Após a aplicação das modificações, o binário foi testado para validar o impacto das alterações realizadas. O novo comportamento confirmou que o controle de acesso foi eliminado e que a execução do sistema passou a permitir privilégios administrativos sem necessidade de autenticação.
+
+6. Resultados Obtidos
+Com as modificações aplicadas, os seguintes resultados foram observados:
+
+A verificação de senha foi completamente eliminada, permitindo que qualquer entrada seja aceita como válida.
+O menu principal foi alterado, garantindo que qualquer opção digitada ative o modo administrativo.
+A execução do binário foi alterada sem necessidade de recompilação ou acesso ao código-fonte original.
+A modificação direta do binário demonstrou como controles de autenticação e lógica de fluxo podem ser manipulados por meio de engenharia reversa, reforçando a importância de implementar mecanismos de proteção robustos em software distribuído.
+
+7. Conclusão e Recomendações
+A análise realizada demonstrou que a segurança de um sistema pode ser comprometida quando mecanismos de autenticação e controle de fluxo não são devidamente protegidos. A possibilidade de modificar um binário sem acesso ao código-fonte ressalta a importância de implementar medidas preventivas, tais como:
+
+Uso de técnicas de ofuscação de código, dificultando a engenharia reversa.
+Proteção contra manipulação de memória, incluindo ASLR e canários de pilha.
+Autenticação baseada em hashing seguro, evitando comparações diretas de strings no código.
+A análise revelou vulnerabilidades que podem ser exploradas para obtenção de acesso não autorizado e reforça a necessidade de auditorias regulares em sistemas críticos para garantir a integridade e a segurança da informação.
+
+Este relatório documenta as técnicas aplicadas e os resultados obtidos durante a análise do binário. Recomenda-se a continuidade das pesquisas utilizando abordagens avançadas para mitigação de vulnerabilidades e fortalecimento da segurança de sistemas binários.
+
+
+
+
+
+
+
