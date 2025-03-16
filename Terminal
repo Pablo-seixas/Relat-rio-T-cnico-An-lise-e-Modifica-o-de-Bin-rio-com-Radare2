@@ -1,0 +1,269 @@
+(kali㉿kali)-[~/Documentos/fluxo_de_caixa.c]
+└─$ radare2 -A fluxo_de_caixa                                     
+WARN: Relocs has not been applied. Please use `-e bin.relocs.apply=true` or `-e bin.cache=true` next time
+INFO: Analyze all flags starting with sym. and entry0 (aa)
+INFO: Analyze imports (af@@@i)
+INFO: Analyze entrypoint (af@ entry0)
+INFO: Analyze symbols (af@@@s)
+INFO: Analyze all functions arguments/locals (afva@@@F)
+INFO: Analyze function calls (aac)
+INFO: Analyze len bytes of instructions for references (aar)
+INFO: Finding and parsing C++ vtables (avrr)
+INFO: Analyzing methods (af @@ method.*)
+INFO: Recovering local variables (afva@@@F)
+INFO: Type matching analysis for all functions (aaft)
+INFO: Propagate noreturn information (aanr)
+INFO: Use -AA or aaaa to perform additional experimental analysis
+[0x00401070]> afl
+0x00401030    1      6 sym.imp.puts
+0x00401040    1      6 sym.imp.printf
+0x00401050    1      6 sym.imp.strcmp
+0x00401060    1      6 sym.imp.__isoc99_scanf
+0x00401070    1     33 entry0
+0x004010b0    4     31 sym.deregister_tm_clones
+0x004010e0    4     49 sym.register_tm_clones
+0x00401120    3     32 entry.fini0
+0x00401150    1      6 entry.init0
+0x004011bc    1     53 sym.consultar_saldo
+0x00401291    5    179 sym.sacar
+0x00401344    1    102 sym.menu
+0x004014e8    1      9 sym._fini
+0x004011f1    4    160 sym.depositar
+0x004013aa    4    111 sym.verificar_acesso_secreto
+0x004010a0    1      1 sym._dl_relocate_static_pie
+0x00401156    1    102 sym.acesso_admin
+0x00401419   21    204 main
+0x00401000    3     23 sym._init
+[0x00401070]> pdf @ sym.acesso_admin
+            ; CALL XREF from sym.verificar_acesso_secreto @ 0x401400(x)                                                             
+            ; CALL XREF from main @ 0x4014a6(x)
+┌ 102: sym.acesso_admin ();
+│           0x00401156      55             push rbp
+│           0x00401157      4889e5         mov rbp, rsp
+│           0x0040115a      488d05a70e..   lea rax, str._n_Acesso_Administrativo_Liberado__ ; 0x402008 ; "\n\U0001f513 Acesso Administrativo Liberado! \U0001f4b0"                                    
+│           0x00401161      4889c7         mov rdi, rax                ; const char *s
+│           0x00401164      e8c7feffff     call sym.imp.puts           ; int puts(const char *s)                                    
+│           0x00401169      488d05c80e..   lea rax, str._Voc_pode_modificar_o_saldo_diretamente. ; 0x402038                         
+│           0x00401170      4889c7         mov rdi, rax                ; const char *s
+│           0x00401173      e8b8feffff     call sym.imp.puts           ; int puts(const char *s)                                    
+│           0x00401178      488d05e80e..   lea rax, str.Digite_o_novo_saldo: ; 0x402067 ; "Digite o novo saldo: "                   
+│           0x0040117f      4889c7         mov rdi, rax                ; const char *format
+│           0x00401182      b800000000     mov eax, 0
+│           0x00401187      e8b4feffff     call sym.imp.printf         ; int printf(const char *format)                             
+│           0x0040118c      488d059d2e..   lea rax, obj.saldo          ; 0x404030                                                   
+│           0x00401193      4889c6         mov rsi, rax
+│           0x00401196      488d05e00e..   lea rax, [0x0040207d]       ; "%f"                                                       
+│           0x0040119d      4889c7         mov rdi, rax                ; const char *format
+│           0x004011a0      b800000000     mov eax, 0
+│           0x004011a5      e8b6feffff     call sym.imp.__isoc99_scanf ; int scanf(const char *format)                              
+│           0x004011aa      488d05cf0e..   lea rax, str._Saldo_atualizado_com_sucesso__n ; 0x402080                                 
+│           0x004011b1      4889c7         mov rdi, rax                ; const char *s
+│           0x004011b4      e877feffff     call sym.imp.puts           ; int puts(const char *s)                                    
+│           0x004011b9      90             nop
+│           0x004011ba      5d             pop rbp
+└           0x004011bb      c3             ret
+[0x00401070]> pdf @ sym.verificar_acesso_secreto
+            ; CALL XREF from main @ 0x4014b2(x)
+┌ 111: sym.verificar_acesso_secreto ();
+│ afv: vars(1:sp[0x28..0x28])
+│           0x004013aa      55             push rbp
+│           0x004013ab      4889e5         mov rbp, rsp
+│           0x004013ae      4883ec20       sub rsp, 0x20
+│           0x004013b2      488d059f0e..   lea rax, str._n_Digite_a_senha_de_acesso_administrativo: ; 0x402258 ; "\n\U0001f510 Digite a senha de acesso administrativo: "                             
+│           0x004013b9      4889c7         mov rdi, rax                ; const char *format
+│           0x004013bc      b800000000     mov eax, 0
+│           0x004013c1      e87afcffff     call sym.imp.printf         ; int printf(const char *format)                             
+│           0x004013c6      488d45e0       lea rax, [s1]
+│           0x004013ca      4889c6         mov rsi, rax
+│           0x004013cd      488d05b40e..   lea rax, [0x00402288]       ; "%s"                                                       
+│           0x004013d4      4889c7         mov rdi, rax                ; const char *format
+│           0x004013d7      b800000000     mov eax, 0
+│           0x004013dc      e87ffcffff     call sym.imp.__isoc99_scanf ; int scanf(const char *format)                              
+│           0x004013e1      488d45e0       lea rax, [s1]
+│           0x004013e5      488d159f0e..   lea rdx, str.acesso_topsecret ; 0x40228b ; "acesso_topsecret"                            
+│           0x004013ec      4889d6         mov rsi, rdx                ; const char *s2
+│           0x004013ef      4889c7         mov rdi, rax                ; const char *s1
+│           0x004013f2      e859fcffff     call sym.imp.strcmp         ; int strcmp(const char *s1, const char *s2)                 
+│           0x004013f7      85c0           test eax, eax
+│       ┌─< 0x004013f9      750c           jne 0x401407
+│       │   0x004013fb      b800000000     mov eax, 0
+│       │   0x00401400      e851fdffff     call sym.acesso_admin
+│      ┌──< 0x00401405      eb0f           jmp 0x401416
+│      ││   ; CODE XREF from sym.verificar_acesso_secreto @ 0x4013f9(x)                                                             
+│      │└─> 0x00401407      488d05920e..   lea rax, str._Senha_incorreta__Acesso_negado._n ; 0x4022a0                               
+│      │    0x0040140e      4889c7         mov rdi, rax                ; const char *s
+│      │    0x00401411      e81afcffff     call sym.imp.puts           ; int puts(const char *s)                                    
+│      │    ; CODE XREF from sym.verificar_acesso_secreto @ 0x401405(x)                                                             
+│      └──> 0x00401416      90             nop
+│           0x00401417      c9             leave
+└           0x00401418      c3             ret
+[0x00401070]> s 0x004013f9
+[0x004013f9]> wa nop; nop
+ERROR: Cannot write. Use `omf`, `io.cache` or reopen the file in rw with `oo+`
+[0x004013f9]> q
+
+┌──(kali㉿kali)-[~/Documentos/fluxo_de_caixa.c]
+└─$ radare2 -Aw fluxo_de_caixa                                    
+WARN: Relocs has not been applied. Please use `-e bin.relocs.apply=true` or `-e bin.cache=true` next time
+INFO: Analyze all flags starting with sym. and entry0 (aa)
+INFO: Analyze imports (af@@@i)
+INFO: Analyze entrypoint (af@ entry0)
+INFO: Analyze symbols (af@@@s)
+INFO: Analyze all functions arguments/locals (afva@@@F)
+INFO: Analyze function calls (aac)
+INFO: Analyze len bytes of instructions for references (aar)
+INFO: Finding and parsing C++ vtables (avrr)
+INFO: Analyzing methods (af @@ method.*)
+INFO: Recovering local variables (afva@@@F)
+INFO: Type matching analysis for all functions (aaft)
+INFO: Propagate noreturn information (aanr)
+INFO: Use -AA or aaaa to perform additional experimental analysis
+[0x00401070]> s 0x004013f9
+[0x004013f9]> wa nop; nop
+INFO: Written 1 byte(s) (nop) = wx 90 @ 0x004013f9
+[0x004013f9]> wq
+ERROR: Invalid `q` subcommand, try `w?`
+[0x004013f9]> pdf @ sym.verificar_acesso_secreto
+            ; CALL XREF from main @ 0x4014b2(x)
+┌ 111: sym.verificar_acesso_secreto ();
+│ afv: vars(1:sp[0x28..0x28])
+│           0x004013aa      55             push rbp
+│           0x004013ab      4889e5         mov rbp, rsp
+│           0x004013ae      4883ec20       sub rsp, 0x20
+│           0x004013b2      488d059f0e..   lea rax, str._n_Digite_a_senha_de_acesso_administrativo: ; 0x402258 ; "\n\U0001f510 Digite a senha de acesso administrativo: "                             
+│           0x004013b9      4889c7         mov rdi, rax                ; const char *format
+│           0x004013bc      b800000000     mov eax, 0
+│           0x004013c1      e87afcffff     call sym.imp.printf         ; int printf(const char *format)                             
+│           0x004013c6      488d45e0       lea rax, [s1]
+│           0x004013ca      4889c6         mov rsi, rax
+│           0x004013cd      488d05b40e..   lea rax, [0x00402288]       ; "%s"                                                       
+│           0x004013d4      4889c7         mov rdi, rax                ; const char *format
+│           0x004013d7      b800000000     mov eax, 0
+│           0x004013dc      e87ffcffff     call sym.imp.__isoc99_scanf ; int scanf(const char *format)                              
+│           0x004013e1      488d45e0       lea rax, [s1]
+│           0x004013e5      488d159f0e..   lea rdx, str.acesso_topsecret ; 0x40228b ; "acesso_topsecret"                            
+│           0x004013ec      4889d6         mov rsi, rdx                ; const char *s2
+│           0x004013ef      4889c7         mov rdi, rax                ; const char *s1
+│           0x004013f2      e859fcffff     call sym.imp.strcmp         ; int strcmp(const char *s1, const char *s2)                 
+│           0x004013f7      85c0           test eax, eax
+│           0x004013f9      90             nop
+..
+│           0x004013fb      b800000000     mov eax, 0
+│           0x00401400      e851fdffff     call sym.acesso_admin
+│       ┌─< 0x00401405      eb0f           jmp 0x401416
+│       │   ; CODE XREF from sym.verificar_acesso_secreto @ 0x4013f9(x)                                                             
+│       │   0x00401407      488d05920e..   lea rax, str._Senha_incorreta__Acesso_negado._n ; 0x4022a0                               
+│       │   0x0040140e      4889c7         mov rdi, rax                ; const char *s
+│       │   0x00401411      e81afcffff     call sym.imp.puts           ; int puts(const char *s)                                    
+│       │   ; CODE XREF from sym.verificar_acesso_secreto @ 0x401405(x)                                                             
+│       └─> 0x00401416      90             nop
+│           0x00401417      c9             leave
+└           0x00401418      c3             ret
+[0x004013f9]> pdf @ main
+            ; ICOD XREF from entry0 @ 0x401084(r)                                                                                                                                                                                           
+┌ 204: int main (int argc, char **argv, char **envp);                                                                                                                                                                                       
+│ afv: vars(1:sp[0xc..0xc])                                                                                                                                                                                                                 
+│           0x00401419      55             push rbp                                                                                                                                                                                         
+│           0x0040141a      4889e5         mov rbp, rsp                                                                                                                                                                                     
+│           0x0040141d      4883ec10       sub rsp, 0x10                                                                                                                                                                                    
+│           ; CODE XREF from main @ 0x4014de(x)                                                                                                                                                                                             
+│       ┌─> 0x00401421      b800000000     mov eax, 0                                                                                                                                                                                       
+│       ╎   0x00401426      e819ffffff     call sym.menu                                                                                                                                                                                    
+│       ╎   0x0040142b      488d45fc       lea rax, [var_4h]                                                                                                                                                                                
+│       ╎   0x0040142f      4889c6         mov rsi, rax                                                                                                                                                                                     
+│       ╎   0x00401432      488d058d0e..   lea rax, [0x004022c6]       ; "%d"                                                                                                                                                               
+│       ╎   0x00401439      4889c7         mov rdi, rax                ; const char *format                                                                                                                                                 
+│       ╎   0x0040143c      b800000000     mov eax, 0                                                                                                                                                                                       
+│       ╎   0x00401441      e81afcffff     call sym.imp.__isoc99_scanf ; int scanf(const char *format)                                                                                                                                      
+│       ╎   0x00401446      8b45fc         mov eax, dword [var_4h]                                                                                                                                                                          
+│       ╎   0x00401449      83f863         cmp eax, 0x63               ; 'c' ; 99                                                                                                                                                           
+│      ┌──< 0x0040144c      745f           je 0x4014ad                                                                                                                                                                                      
+│      │╎   0x0040144e      83f863         cmp eax, 0x63               ; 'c' ; 99                                                                                                                                                           
+│     ┌───< 0x00401451      7f7c           jg 0x4014cf                                                                                                                                                                                      
+│     ││╎   0x00401453      83f82a         cmp eax, 0x2a               ; '*' ; 42                                                                                                                                                           
+│    ┌────< 0x00401456      7449           je 0x4014a1                                                                                                                                                                                      
+│    │││╎   0x00401458      83f82a         cmp eax, 0x2a               ; '*' ; 42                                                                                                                                                           
+│   ┌─────< 0x0040145b      7f72           jg 0x4014cf                                                                                                                                                                                      
+│   ││││╎   0x0040145d      83f804         cmp eax, 4                  ; 4                                                                                                                                                                  
+│  ┌──────< 0x00401460      7457           je 0x4014b9                                                                                                                                                                                      
+│  │││││╎   0x00401462      83f804         cmp eax, 4                  ; 4                                                                                                                                                                  
+│ ┌───────< 0x00401465      7f68           jg 0x4014cf                                                                                                                                                                                      
+│ ││││││╎   0x00401467      83f803         cmp eax, 3                  ; 3                                                                                                                                                                  
+│ ────────< 0x0040146a      7429           je 0x401495                                                                                                                                                                                      
+│ ││││││╎   0x0040146c      83f803         cmp eax, 3                  ; 3                                                                                                                                                                  
+│ ────────< 0x0040146f      7f5e           jg 0x4014cf                                                                                                                                                                                      
+│ ││││││╎   0x00401471      83f801         cmp eax, 1                  ; 1                                                                                                                                                                  
+│ ────────< 0x00401474      7407           je 0x40147d                                                                                                                                                                                      
+│ ││││││╎   0x00401476      83f802         cmp eax, 2                  ; 2                                                                                                                                                                  
+│ ────────< 0x00401479      740e           je 0x401489                                                                                                                                                                                      
+│ ────────< 0x0040147b      eb52           jmp 0x4014cf                                                                                                                                                                                     
+│ ││││││╎   ; CODE XREF from main @ 0x401474(x)
+│ ────────> 0x0040147d      b800000000     mov eax, 0
+│ ││││││╎   0x00401482      e835fdffff     call sym.consultar_saldo
+│ ────────< 0x00401487      eb55           jmp 0x4014de
+│ ││││││╎   ; CODE XREF from main @ 0x401479(x)
+│ ────────> 0x00401489      b800000000     mov eax, 0
+│ ││││││╎   0x0040148e      e85efdffff     call sym.depositar
+│ ────────< 0x00401493      eb49           jmp 0x4014de
+│ ││││││╎   ; CODE XREF from main @ 0x40146a(x)
+│ ────────> 0x00401495      b800000000     mov eax, 0
+│ ││││││╎   0x0040149a      e8f2fdffff     call sym.sacar
+│ ────────< 0x0040149f      eb3d           jmp 0x4014de
+│ ││││││╎   ; CODE XREF from main @ 0x401456(x)
+│ │││└────> 0x004014a1      b800000000     mov eax, 0
+│ │││ ││╎   0x004014a6      e8abfcffff     call sym.acesso_admin
+│ │││┌────< 0x004014ab      eb31           jmp 0x4014de
+│ ││││││╎   ; CODE XREF from main @ 0x40144c(x)
+│ │││││└──> 0x004014ad      b800000000     mov eax, 0
+│ │││││ ╎   0x004014b2      e8f3feffff     call sym.verificar_acesso_secreto
+│ │││││┌──< 0x004014b7      eb25           jmp 0x4014de
+│ ││││││╎   ; CODE XREF from main @ 0x401460(x)
+│ │└──────> 0x004014b9      488d05090e..   lea rax, str._n_Saindo_do_sistema... ; 0x4022c9 ; "\n\U0001f51a Saindo do sistema..."
+│ │ ││││╎   0x004014c0      4889c7         mov rdi, rax                ; const char *s
+│ │ ││││╎   0x004014c3      e868fbffff     call sym.imp.puts           ; int puts(const char *s)
+│ │ ││││╎   0x004014c8      b800000000     mov eax, 0
+│ │┌──────< 0x004014cd      eb14           jmp 0x4014e3
+│ ││││││╎   ; CODE XREFS from main @ 0x401451(x), 0x40145b(x), 0x401465(x), 0x40146f(x), 0x40147b(x)
+│ └─└─└───> 0x004014cf      488d05120e..   lea rax, str._Opo_invlida__Tente_novamente._n ; 0x4022e8
+│  │ │ │╎   0x004014d6      4889c7         mov rdi, rax                ; const char *s
+│  │ │ │╎   0x004014d9      e852fbffff     call sym.imp.puts           ; int puts(const char *s)
+│  │ │ ││   ; CODE XREFS from main @ 0x401487(x), 0x401493(x), 0x40149f(x), 0x4014ab(x), 0x4014b7(x)
+│ ───└─└└─< 0x004014de      e93effffff     jmp 0x401421
+│  │        ; CODE XREF from main @ 0x4014cd(x)
+│  └──────> 0x004014e3      c9             leave
+└           0x004014e4      c3             ret
+[0x004013f9]> cmp eax, 42
+ERROR: One or more files can't be read
+[0x004013f9]> jne 0x00401490  ; Se não for 42, vai para outra opção
+ERROR: Invalid command 'jne 0x00401490  ; Se não for 42, vai para outra opção' (0x6a)
+[0x004013f9]> s 0x00401456
+[0x00401456]> wa cmp eax, eax
+INFO: Written 2 byte(s) (cmp eax, eax) = wx 39c0 @ 0x00401456
+[0x00401456]> :q
+[0x00401456]> ./fluxo_de_caixa
+^C
+[0x00401456]> 
+[0x00401456]> exit
+
+┌──(kali㉿kali)-[~/Documentos/fluxo_de_caixa.c]
+└─$ history > historico_comandos.txt                          
+
+┌──(kali㉿kali)-[~/Documentos/fluxo_de_caixa.c]
+└─$ ls                                                        
+fluxo_de_caixa  fluxo_de_caixa.c  historico_comandos.txt
+
+┌──(kali㉿kali)-[~/Documentos/fluxo_de_caixa.c]
+└─$ echo ":> ood" > historico_radare2.txt                     
+r2 -qc "o; q" fluxo_de_caixa >> historico_radare2.txt
+WARN: Relocs has not been applied. Please use `-e bin.relocs.apply=true` or `-e bin.cache=true` next time
+
+┌──(kali㉿kali)-[~/Documentos/fluxo_de_caixa.c]
+└─$ echo ":> ood" > historico_radare2.txt                     
+r2 -qc "o; q" fluxo_de_caixa >> historico_radare2.txt
+WARN: Relocs has not been applied. Please use `-e bin.relocs.apply=true` or `-e bin.cache=true` next time
+
+┌──(kali㉿kali)-[~/Documentos/fluxo_de_caixa.c]
+└─$ history -w historico_completo.txt                         
+
+┌──(kali㉿kali)-[~/Documentos/fluxo_de_caixa.c]
+└─$         
